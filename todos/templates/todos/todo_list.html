@@ -1,0 +1,136 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<style>
+  /* Local styles for the list view */
+  .date-pills {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .date-pill {
+    background-color: #f5f5f5;
+    color: var(--text-muted);
+    border-radius: 12px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 60px;
+    font-size: 0.85rem;
+  }
+  .date-pill.active {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(255, 107, 139, 0.3);
+  }
+  .task-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .task-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    width: 70px;
+    flex-shrink: 0;
+  }
+  .task-content {
+    flex: 1;
+    padding: 0 12px;
+  }
+  .task-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+    color: var(--text-main);
+  }
+  .task-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    background: transparent;
+  }
+  .custom-checkbox.checked {
+    background-color: var(--primary);
+    color: white;
+  }
+  .task-actions a {
+    color: var(--text-muted);
+    margin-left: 8px;
+    font-size: 0.9rem;
+  }
+</style>
+
+<div class="header-theme">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <i class="bi bi-grid-fill"></i>
+    <span style="font-weight: 500;">Flower Hub To-Do</span>
+    <i class="bi bi-flower1"></i>
+  </div>
+  <div class="d-flex justify-content-between align-items-end mt-4">
+    <div>
+      <h2 class="m-0" style="font-weight: 700; font-size: 1.8rem;">Today</h2>
+      <small style="opacity: 0.8;">{{ todos|length }} Tasks</small>
+    </div>
+    <a href="{% url 'todo_create' %}" class="btn-add-new">Add New</a>
+  </div>
+</div>
+
+<div class="app-body">
+  <div class="date-pills">
+    <div class="date-pill active"><strong>14</strong><br>Mon</div>
+    <div class="date-pill"><strong>15</strong><br>Tue</div>
+    <div class="date-pill"><strong>16</strong><br>Wed</div>
+    <div class="date-pill"><strong>17</strong><br>Thu</div>
+  </div>
+
+  <h5 class="mb-3" style="font-weight: 700; font-size: 1.1rem;">My Tasks</h5>
+
+  <div class="todo-list">
+    {% for todo in todos %}
+    <div class="task-item">
+      <div class="task-time">08:00 - 10:00</div>
+      
+      <div class="task-content">
+        <div class="task-title {% if todo.completed %}text-decoration-line-through text-muted{% endif %}">
+          {{ todo.title }}
+        </div>
+        <div class="task-desc">Task description goes here</div>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <form method="post" action="{% url 'todo_toggle' todo.id %}" class="m-0 p-0">
+          {% csrf_token %}
+          <button type="submit" style="border:none; background:none; padding:0;">
+            <div class="custom-checkbox {% if todo.completed %}checked{% endif %}">
+              <i class="bi bi-check"></i>
+            </div>
+          </button>
+        </form>
+        
+        <div class="task-actions ms-2">
+          <a href="{% url 'todo_edit' todo.id %}"><i class="bi bi-pencil"></i></a>
+          <a href="{% url 'todo_delete' todo.id %}" class="text-danger"><i class="bi bi-trash"></i></a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="text-center mt-5 text-muted">
+      <i class="bi bi-inbox display-4"></i>
+      <p class="mt-2">No tasks yet.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

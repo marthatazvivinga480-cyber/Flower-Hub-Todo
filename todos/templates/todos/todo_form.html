@@ -1,0 +1,141 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<style>
+    /* Local styles for the Create View */
+    .category-scroll {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 4px 0 20px 0;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .category-scroll::-webkit-scrollbar { display: none; }
+
+    .cat-chip {
+        padding: 8px 16px;
+        border-radius: 20px;
+        background: #f8f9fa;
+        border: 1px solid #eee;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        color: var(--text-muted);
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    .cat-chip.active {
+        background: var(--primary-light);
+        border-color: var(--primary);
+        color: var(--primary);
+        font-weight: 600;
+    }
+    
+    .input-group-custom {
+        background: #fff;
+        border: 1px solid #f0f0f0;
+        border-radius: 16px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        transition: border-color 0.2s;
+    }
+    .input-group-custom:focus-within {
+        border-color: var(--primary);
+    }
+    .input-group-custom label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 4px;
+    }
+    /* Style the actual Django form inputs */
+    .input-group-custom input, 
+    .input-group-custom textarea {
+        border: none !important;
+        padding: 0 !important;
+        width: 100%;
+        font-size: 1rem;
+        outline: none;
+        color: var(--text-main);
+    }
+    .input-group-custom textarea {
+        font-size: 0.9rem;
+    }
+    .task-hero-input {
+        font-size: 1.5rem !important;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+</style>
+
+<div class="header-white">
+    <a href="{% url 'todo_list' %}" style="color: var(--text-main); font-size: 1.2rem;">
+        <i class="bi bi-x-lg"></i>
+    </a>
+    <span style="font-weight: 700;">New Task</span>
+    <button type="submit" form="task-form" style="background: none; border: none; color: var(--primary); font-weight: 700;">
+        Done
+    </button>
+</div>
+
+<div class="app-body">
+    <form method="post" id="task-form">
+        {% csrf_token %}
+
+        <div class="mb-4">
+            <label class="small text-muted mb-2 fw-bold">What is to be done?</label>
+            <input type="text" name="title" class="task-hero-input w-100 border-0" placeholder="Enter task name..." required style="outline:none; background:transparent;">
+            <hr style="border-color: var(--primary); opacity: 0.2;">
+        </div>
+
+        <label class="small text-muted mb-2 fw-bold">Category</label>
+        <div class="category-scroll">
+            <div class="cat-chip active"><i class="bi bi-lightbulb me-1"></i> Idea</div>
+            <div class="cat-chip"><i class="bi bi-briefcase me-1"></i> Work</div>
+            <div class="cat-chip"><i class="bi bi-heart me-1"></i> Personal</div>
+            <div class="cat-chip"><i class="bi bi-cart me-1"></i> Shopping</div>
+        </div>
+
+        <div class="input-group-custom">
+            <label>Notes & Details</label>
+            <textarea name="description" rows="4" placeholder="Add more information about this flower..."></textarea>
+        </div>
+
+        <div class="input-group-custom d-flex justify-content-between align-items-center">
+            <div>
+                <label>Set Reminder</label>
+                <span class="small text-muted">Today, 14:00</span>
+            </div>
+            <i class="bi bi-calendar-plus text-primary" style="font-size: 1.2rem;"></i>
+        </div>
+
+        <div style="display: none;">
+            {% for field in form %}
+                {% if field.name != "title" and field.name != "description" %}
+                    {{ field }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+<div class="px-4 pb-4 mt-auto">
+    <button type="submit" form="task-form" class="btn-primary-custom shadow">
+        <i class="bi bi-plus-lg me-2"></i> Plant Task
+    </button>
+</div>
+
+<script>
+    // Simple UI interaction for Category Chips
+    const chips = document.querySelectorAll('.cat-chip');
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+        });
+    });
+</script>
+{% endblock %}

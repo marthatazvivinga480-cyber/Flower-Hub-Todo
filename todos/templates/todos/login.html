@@ -1,0 +1,27 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<div class="app-body d-flex flex-column align-items-center justify-content-center">
+  
+  <div class="text-center mb-5">
+    <i class="bi bi-flower1" style="font-size: 3rem; color: var(--primary); margin-bottom: 10px; display: inline-block;"></i>
+    <h1 style="font-weight: 700; color: var(--primary);">Flower Hub</h1>
+    <p class="text-muted">Login to manage your tasks</p>
+  </div>
+
+  <form method="post" class="w-100">
+    {% csrf_token %}
+    <div class="mb-4">
+      {% for field in form %}
+        <div class="mb-3">
+          {{ field }}
+        </div>
+      {% endfor %}
+    </div>
+    
+    <button class="btn-primary-custom" type="submit">
+      Login
+    </button>
+  </form>
+</div>
+{% endblock %}
