@@ -20,9 +20,9 @@ application = get_wsgi_application()
 if os.environ.get('RUN_MIGRATIONS_ON_STARTUP', 'True') == 'True':
     call_command('migrate', interactive=False, verbosity=1)
 
-admin_username = os.environ.get('ADMIN_USERNAME')
-admin_password = os.environ.get('ADMIN_PASSWORD')
-admin_email = os.environ.get('ADMIN_EMAIL', '')
+admin_username = os.environ.get('ADMIN_USERNAME', '').strip()
+admin_password = os.environ.get('ADMIN_PASSWORD', '').strip()
+admin_email = os.environ.get('ADMIN_EMAIL', '').strip()
 
 if admin_username and admin_password:
     User = get_user_model()
@@ -36,3 +36,8 @@ if admin_username and admin_password:
         user.is_superuser = True
         user.set_password(admin_password)
         user.save()
+        print(f"Admin user '{admin_username}' was {'created' if created else 'updated'}.")
+    else:
+        print(f"Admin user '{admin_username}' already exists.")
+else:
+    print('ADMIN_USERNAME and ADMIN_PASSWORD were not both set; admin user was not created.')
