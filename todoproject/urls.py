@@ -25,7 +25,7 @@ urlpatterns = [
         'login/',
         auth_views.LoginView.as_view(
             template_name='todos/login.html',
-            next_page='todo_list',
+            next_page='/',
             redirect_authenticated_user=True,
         ),
         name='login',
