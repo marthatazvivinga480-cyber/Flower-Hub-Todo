@@ -9,7 +9,7 @@
     <p class="text-muted">Login to manage your tasks</p>
   </div>
 
-  <form method="post" class="w-100">
+  <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <div class="mb-4">
       {% for field in form %}
